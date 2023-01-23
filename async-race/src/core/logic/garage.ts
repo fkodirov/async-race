@@ -1,8 +1,9 @@
 import GaragePage from "../../pages/garage";
-import { newApp } from "../..";
+import { Winners } from "../..";
 import mark from "../cars/mark";
 import model from "../cars/mark";
 import colors from "../cars/colors";
+import { json } from "body-parser";
 
 function getAction(e:Event){
   const count=document.querySelectorAll(`[value="${(<HTMLInputElement>e.target).value}"]`);
@@ -79,6 +80,7 @@ else if((<HTMLInputElement>e.target).value=='select'){
           if((<HTMLInputElement>document.querySelector('#winnername')).value==''){
           (<HTMLInputElement>document.querySelector('#winnername')).value='qwerty';
           if((<HTMLInputElement>document.querySelector('[value="race"]')).hasAttribute('disabled')){
+            createwinner(Number(document.querySelectorAll('[value="remove"]')[index].id),1,Number((endtime/1000).toFixed(2)));
           (<HTMLElement>document.querySelector('.wow')).innerHTML=`${(<HTMLElement>document.querySelectorAll('.name')[index]).textContent} went 1st ${(endtime/1000).toFixed(2)}s`;
           (<HTMLElement>document.querySelector('.wow')).style.display='block';}
           // alert(`${(<HTMLElement>document.querySelectorAll('.name')[index]).textContent} ${endtime/1000}`);
@@ -124,7 +126,7 @@ else if((<HTMLInputElement>e.target).value=='generate-cars'){
   generateCar();}
 }
 async function generateCar(){
-  for(let i:number=0;i<10;i++){
+  for(let i:number=0;i<100;i++){
     let rand=Math.floor(Math.random() * mark.length);
     let rand2=Math.floor(Math.random() * mark.length);
     let rand3=Math.floor(Math.random() * colors.length);
@@ -172,6 +174,64 @@ async function updatecar(e:Event){
         }
       )
 }
+
+async function createwinner(id:number,wins:number,time:number){
+  getwinner(id).then((result)=>{
+    setTimeout(()=>{Winners.renderWinners();
+      if(result.id){
+        if(time<result.time){
+          updatewinner(id,result.wins+1,time);
+        }
+        else{
+          updatewinner(id,result.wins+1,result.time);
+        }
+      }
+      else{
+        (async()=>{let data={id: id, wins: wins,time:time};
+        const response = await fetch(
+          `http://127.0.0.1:3000/winners`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data),
+            }
+        )
+          })();
+      }
+    },2000)
+  })
+    
+}
+
+async function getwinner(id:number){
+  let data:{id:number,wins:number,time:number};
+    const response = await fetch(
+      `http://127.0.0.1:3000/winners/${id}`,
+      {
+        method: 'GET',
+      }
+    )
+    data= await response.json();
+    return data;
+}
+
+async function updatewinner(id:number,wins:number,time:number){
+  let data={wins: wins,time:time};
+    const response = await fetch(
+      `http://127.0.0.1:3000/winners/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      }
+    )
+    
+}
+
 
 
 

@@ -59,6 +59,8 @@ const cars=[`<path fill-rule="evenodd" d="m2.2 125.4c0.9-4.5 2.2-9.9 2.2-9.9l-0.
   15.6zm9.3-23.6l-11.8-13.9c-8.3 4.1-7.1 16.1-7.1 16.1z"/>`];
 
 class WinnersPage extends BaseComponent {
+  tbody:HTMLElement;
+  count:HTMLElement;
   constructor(title: string, content: string) {
     super('main');
     // const nav= new BaseComponent('nav').render(this);
@@ -66,6 +68,7 @@ class WinnersPage extends BaseComponent {
     // const nav2=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Winners').render(nav);
     const main=new BaseComponent('main').render(this);
     const countblock=new BaseComponent('div').setClass('garage-settings').setHTML(`<h1>${title}</h1`).render(main);
+    this.count=new BaseComponent('span').setClass('count').setContent(``).render(countblock);
     new BaseComponent('div').setClass('garage-settings').setHTML(`Page # <span class="page">1</span>`).render(main);
     const table=new BaseComponent('table').setHandler('load',getWinners).setClass('table').setHTML(`<thead class="table-head">
     <tr>
@@ -76,74 +79,52 @@ class WinnersPage extends BaseComponent {
       <th id="time">Best time</id=></th>
     </tr>
   </thead>`).render(main);
-  const tbody=new BaseComponent('tbody').setClass('table-body').setHTML('').render(table);
-(async function getResponse() {
-  let data:TGarage;
-  const response = await fetch(
-    'http://127.0.0.1:3000/garage',
-    {
-      method: 'GET',
-    }
-  );
-  return data = await response.json(); 
-})().then((garage)=>{
-  let garageObj:Response={};
-  for(let i:number=0;i<garage.length;i++){
-    let id:number=garage[i].id;
-    garageObj[id]={'name':garage[i].name,color:garage[i].color};
-  }
-
-  getWinners().then((result)=>{
-    const count=new BaseComponent('span').setClass('count').setContent(`(${result.length})`).render(countblock);
-    for(let i:number=0;i<result.length;i++){
-      new BaseComponent('tr').setHTML(`<tr>
-      <td>${i+1}</td>
-      <td>
-      <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[garage[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
-      </td>
-      <td>${garageObj[garage[i].id].name}</td>
-      <td>${result[i].wins}</td>
-      <td>${result[i].time.toFixed(2)}</td>
-    </tr>`).render(tbody);
-    }
-    
-    
+  this.tbody=new BaseComponent('tbody').setClass('table-body').setHTML('').render(table);
+  this.renderWinners();
 
 
-
-
-
-});
-
-  
-   
-  //   <tbody class="table-body">
-  //   
-  //   <tr>
-  //     <td>2</td>
-  //     <td>
-  //       <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
-  //     </td>
-  //     <td>BMW</td>
-  //     <td>1</td>
-  //     <td>9.807</td>
-  //   </tr>
-  // </tbody>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  });
   const pagination= new BaseComponent('div').setClass('pagination').setHTML(`<input type="button" class="btn btn-page" value="Prev">
   <input type="button" class="btn btn-page" value="Next">`).render(main);
 
+  }
+
+
+  renderWinners(){
+    this.tbody.innerHTML=``;
+    (async function getResponse() {
+      let data:TGarage;
+      const response = await fetch(
+        'http://127.0.0.1:3000/garage',
+        {
+          method: 'GET',
+        }
+      );
+      return data = await response.json(); 
+    })().then((garage)=>{
+      let garageObj:Response={};
+      for(let i:number=0;i<garage.length;i++){
+        let id:number=garage[i].id;
+        garageObj[id]={'name':garage[i].name,color:garage[i].color};
+      }
+    
+      getWinners().then((result)=>{
+        this.count.innerHTML=`(${result.length})`;
+        for(let i:number=0;i<result.length;i++){
+          new BaseComponent('tr').setHTML(`<tr>
+          <td>${i+1}</td>
+          <td>
+          <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[garage[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
+          </td>
+          <td>${garageObj[garage[i].id].name}</td>
+          <td>${result[i].wins}</td>
+          <td>${result[i].time.toFixed(2)}</td>
+        </tr>`).render(this.tbody);
+        }
+    });
+    
+       
+      
+      });
   }
 }
 

@@ -9,57 +9,54 @@ import WinnersPage from './pages/winners';
 import Page from './core/templates/page';
 import Link from './core/templates/link';
 
-function newApp() {
-  const routes: Record<string, Page> = {
-    garage: new GaragePage('Garage', ''),
-    winners: new WinnersPage('Winners', 'Winners page content'),
-  };
+const Winners = new WinnersPage('Winners', 'Winners page content');
+const routes: Record<string, Page> = {
+  garage: new GaragePage('Garage', ''),
+  winners: Winners,
+};
 
-  const notFoundPage = new Page('404', 'Not found');
+const notFoundPage = new Page('404', 'Not found');
 
-  class App {
-    private container: HTMLElement = <HTMLElement>(
-      document.getElementById('app')
-    );
+class App {
+  private container: HTMLElement = <HTMLElement>document.getElementById('app');
 
-    activePage?: Page;
+  activePage?: Page;
 
-    header: Header;
+  header: Header;
 
-    constructor() {
-      this.header = new Header();
-    }
-
-    handleRouteChange(): void {
-      const hash = window.location.hash.slice(1).toLowerCase();
-      const targetPage = hash ? routes[hash] || notFoundPage : routes.garage;
-      console.log(targetPage, this.activePage);
-
-      if (targetPage === this.activePage) return;
-      if (this.activePage) this.activePage.remove();
-      this.activePage = targetPage;
-      this.activePage.renderAfter(this.header);
-    }
-
-    start() {
-      const nav = new BaseComponent('nav').setClass('nav');
-      // // const footer = new Footer('footer', 'footer');
-
-      Object.keys(routes).forEach((route) => {
-        new Link(route).render(nav);
-      });
-      nav.render(this.header);
-      this.header.render(this.container);
-
-      this.handleRouteChange();
-      window.onpopstate = () => this.handleRouteChange();
-      // this.container.insertAdjacentElement('beforeend', footer.render());
-    }
+  constructor() {
+    this.header = new Header();
   }
 
-  const app = new App();
-  app.start();
-  console.log(app);
+  handleRouteChange(): void {
+    const hash = window.location.hash.slice(1).toLowerCase();
+    const targetPage = hash ? routes[hash] || notFoundPage : routes.garage;
+    // console.log(targetPage, this.activePage);
+
+    if (targetPage === this.activePage) return;
+    if (this.activePage) this.activePage.remove();
+    this.activePage = targetPage;
+    this.activePage.renderAfter(this.header);
+  }
+
+  start() {
+    const nav = new BaseComponent('nav').setClass('nav');
+    // // const footer = new Footer('footer', 'footer');
+
+    Object.keys(routes).forEach((route) => {
+      new Link(route).render(nav);
+    });
+    nav.render(this.header);
+    this.header.render(this.container);
+
+    this.handleRouteChange();
+    window.onpopstate = () => this.handleRouteChange();
+    // this.container.insertAdjacentElement('beforeend', footer.render());
+  }
 }
-newApp();
-export { newApp };
+
+const app = new App();
+app.start();
+// console.log(app);
+
+export { Winners };
