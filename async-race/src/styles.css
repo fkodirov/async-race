@@ -1,0 +1,118 @@
+:root {
+  --grey: invert(100%) sepia(2%) saturate(1279%) hue-rotate(216deg) brightness(115%) contrast(79%);
+  --red: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+  --yellow: invert(90%) sepia(45%) saturate(3997%) hue-rotate(2deg) brightness(110%) contrast(85%);
+  --light-blue: invert(61%) sepia(89%) saturate(4225%) hue-rotate(162deg) brightness(95%) contrast(101%); 
+  --green: invert(49%) sepia(48%) saturate(3424%) hue-rotate(81deg) brightness(140%) contrast(85%);
+}
+
+ul,div,input,p,label{
+  padding: 0;
+  margin: 0;
+}
+nav{
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+}
+a{
+  font-size: 13.5px;
+  text-decoration: none;
+  color: black;
+  display: flex;
+  align-items: center;
+  margin-left: 1px;
+}
+.btn{
+  background-color: #00ADAD;
+  text-transform: uppercase;
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: 700;
+}
+.btn-2{
+  background-color: #ABABAB;
+}
+.btn-1{
+  background-color: #f5f1f1;
+}
+body{
+  background-image: radial-gradient(circle, #000000, #050306, #05080e, #010e11, #02120f);
+  font-family: 'Rosario', sans-serif;
+  font-size: 16px;
+}
+.garage-settings{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+}
+h1, .count{
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #f5f1f1;
+}
+div, span{
+  color: #f5f1f1;
+  font-weight: 700;
+}
+.track{
+  padding: 5px;
+  display: flex; 
+  justify-content: center;
+  flex-direction: column;
+  border-bottom: dotted;
+  gap: 10px;
+}
+.track-go{
+  position: relative;
+  height: 30px;
+}
+.car{
+  position: absolute;
+}
+.hidden{
+  display: none;
+}
+.wow{
+  display: none;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 35px;
+  background: linear-gradient(to right, #18b0a5 0%, #6c12d8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.finish{
+  position: absolute;
+  right: 115px;
+  filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);
+  width: 40px;
+}
+.grey{
+  filter: var(--grey);
+}
+.red{
+  filter: var(--red);
+}
+.yellow{
+  filter: var(--yellow);
+}
+.green{
+  filter: var(--green);
+}
+.light-blue{
+  filter: var(--light-blue);
+}
+.pagination{
+  display: flex;
+  gap: 10px;
+  padding: 5px;
+}
+.table{
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
