@@ -84,6 +84,8 @@ div, span{
   background: linear-gradient(to right, #18b0a5 0%, #6c12d8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  min-width: 400px;
+  text-align: center;
 }
 .finish{
   position: absolute;

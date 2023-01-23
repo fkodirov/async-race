@@ -3,6 +3,7 @@ import {getAction} from '../../core/logic/garage';
 import {startrace} from '../../core/logic/garage';
 import { createcar } from '../../core/logic/garage';
 import { updatecar } from '../../core/logic/garage';
+import { generateCar } from '../../core/logic/garage';
 
 import { obj2 } from '../../core/types';
 import { Response2 } from '../../core/types';
@@ -71,8 +72,8 @@ import { TGarage } from '../../core/types';
 
 let data:TGarage;
 class GaragePage extends BaseComponent {
-  tracks:any;
-  count:any;
+  tracks:HTMLElement;
+  count:HTMLElement;
   constructor(title: string, content: string) {
     super('main');
     // const nav= new BaseComponent('nav').render(this);
@@ -85,60 +86,109 @@ class GaragePage extends BaseComponent {
     const form2=new BaseComponent('form').setAttribute('id','update').setHandler('click',(e)=>{this.updateCar(e)}).setClass('garage-settings').setHTML(`<input type="text" id="newname">
     <input type="color" id="newcolor" value="#ffffff">
     <input type="button" class="btn btn-2" value="update">`).render(main);
-    const raceblock:HTMLElement=new BaseComponent('div').setClass('garage-settings').setHandler('click',(e)=>startrace(raceblock,e)).setHTML(`<input type="button" id="race" class="btn" value="race">
+    new BaseComponent('div').setClass('garage-settings').setHandler('click',(e)=>this.action2(e)).setHTML(`<input type="button" id="race" class="btn" value="race">
     <input type="button" id="reset" class="btn" value="reset">
     <input type="button" id="generate" class="btn btn-1" value="generate-cars"><input id="winnername" class="hidden" type="text" value="">`).render(main);
     const countblock=new BaseComponent('div').setClass('garage-settings').setHTML(`<h1>${title}</h1>`).render(main);
     this.count=new BaseComponent('span').setClass('count').render(countblock);
     new BaseComponent('div').setClass('garage-settings').setHTML(`Page # <span class="page">1</span>`).render(main);
     this.tracks=new BaseComponent('div').setClass('tracks').render(main);
-    this.renderGarage(this.tracks,this.count);
+    this.renderGarage(this.tracks,this.count,this.getpage());
+    new BaseComponent('div').setClass('wow').render(main);  
+      
 
-      new BaseComponent('div').setClass('pagination').setHTML(`<input type="button" class="btn btn-page" value="Prev">
-      <input type="button" class="btn btn-page" value="Next">`).render(main);
-      new BaseComponent('div').setClass('wow').render(main);
-
+  }
+  getpage(){
+    let page;
+    if((<HTMLElement>document.querySelector('.page'))){
+        page=(<HTMLElement>document.querySelector('.page'))?.innerHTML;
+        return page=Number(page);
+    }
+    else {
+        return page=1;
+    }
   }
   addNewCar(e:Event){
     if((<HTMLInputElement>e.target).value=='create'){
       Promise.resolve(createcar(e)).then(()=>{
       this.tracks.innerHTML=``;
-      this.renderGarage(this.tracks,this.count);});
+      (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+      this.renderGarage(this.tracks,this.count,this.getpage());});
     }
   }
   updateCar(e:Event){
     if((<HTMLInputElement>e.target).value=='update'){
       Promise.resolve(updatecar(e)).then(()=>{
       this.tracks.innerHTML=``;
-      this.renderGarage(this.tracks,this.count);});
+      (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+      this.renderGarage(this.tracks,this.count,this.getpage());});
     }
   }
   action(e:Event){
     if((<HTMLInputElement>e.target).value=='remove'){
       Promise.resolve(getAction(e)).then(()=>{
         setTimeout(()=>{this.tracks.innerHTML=``;
-        this.renderGarage(this.tracks,this.count);},1000);
+        (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+        let countcar=(<HTMLElement>this.count).innerHTML;
+        if((Number(countcar)-1)%7==0){
+        this.renderGarage(this.tracks,this.count,Number(this.getpage())-1);
+        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()-1}`;}
+        else{this.renderGarage(this.tracks,this.count,this.getpage())}},1000);
     });
     }
     else{
       Promise.resolve(getAction(e));
     }
   }
+  action2(e:Event){
+    if((<HTMLInputElement>e.target).value=='generate-cars'){
+      startrace(e);
+      setTimeout(()=>{
+        this.tracks.innerHTML=``;
+      (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+      this.renderGarage(this.tracks,this.count,this.getpage());
+      },1000)}
+    else{
+      startrace(e);
+      }
+  }
+  pagination(e:Event){
+    setTimeout(()=>{
+    if((<HTMLInputElement>e.target).value=='next'){
+      if(7*this.getpage()<Number(this.count.innerHTML)){
+        this.tracks.innerHTML=``;
+        (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+        this.renderGarage(this.tracks,this.count,this.getpage()+1);
+        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()+1}`;
+      }
+    }
+    else if((<HTMLInputElement>e.target).value=='prev'){
+      if(this.getpage()>1){
+        this.tracks.innerHTML=``;
+        (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+        this.renderGarage(this.tracks,this.count,this.getpage()-1);
+        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()-1}`;
+      }
+    }
+      },1000);
+  }
 
-  async getResponse() {
+  async getResponse(page:number) {
     const response = await fetch(
-      'http://127.0.0.1:3000/garage',
+      `http://127.0.0.1:3000/garage?_page=${Number(page)}&_limit=7`,
       {
         method: 'GET',
       }
     );
+    this.count.innerHTML=<string>response.headers.get('X-Total-Count');
     return data = await response.json(); 
   }
   
-  async renderGarage(tracks:HTMLElement,count:HTMLElement){
-    const result:Response2 = await this.getResponse(); 
+  async renderGarage(tracks:HTMLElement,count:HTMLElement,page:number){
+    // count.innerHTML=
+    const result:Response2 = await this.getResponse(page); 
     for(let key in result){
-      count.innerHTML=`(${Number(key)+1})`;
+      // count.innerHTML=`(${Number(key)+1})`;
       // (<HTMLElement>document.querySelector('.count')).innerHTML=`(${Number(key)+1})`;
     const track=new BaseComponent('div').setClass('track').render(tracks);
         new BaseComponent('div').setClass('track-buttons').setHandler('click',(e)=>this.action(e)).setHTML(`<input id="start" type="button" class="btn btn-1" value="start">
@@ -148,7 +198,10 @@ class GaragePage extends BaseComponent {
         <span class="name">${result[key].name}</span>`).render(track);
         const trackgo=new BaseComponent('div').setClass('track-go').setHTML(`<svg class="car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${result[key].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
         <img src="${finish}" class="finish" height="35" alt="finish">`).render(track);
-    }   
+    }
+      new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="prev">
+      <input type="button" class="btn btn-page" value="next">`).renderAfter(tracks);
+       
   }
 }
 

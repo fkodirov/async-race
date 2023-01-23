@@ -1,5 +1,8 @@
 import GaragePage from "../../pages/garage";
 import { newApp } from "../..";
+import mark from "../cars/mark";
+import model from "../cars/mark";
+import colors from "../cars/colors";
 
 function getAction(e:Event){
   const count=document.querySelectorAll(`[value="${(<HTMLInputElement>e.target).value}"]`);
@@ -65,7 +68,7 @@ else if((<HTMLInputElement>e.target).value=='select'){
           method: 'PATCH'
           }).then(res => res.ok ? res : Promise.reject(res))
           // .then(data => console.log('+', data))
-          .catch(() => {clearInterval(timer);console.log(false);return 'false';});})();
+          .catch(() => {clearInterval(timer);});})();
       let endtime=distance/velocity;
       let sdvig=endtime/((<HTMLElement>document.querySelector('.track-go')).clientWidth-115);
       let start = Date.now();
@@ -98,7 +101,7 @@ else if((<HTMLInputElement>e.target).value=='select'){
 
     
 
-async function startrace(a:HTMLElement,e:Event){
+async function startrace(e:Event){
   if((<HTMLInputElement>e.target).value=='race'){
     (<HTMLInputElement>e.target).setAttribute('disabled','disabled');
     const count=document.querySelectorAll('#start');
@@ -117,8 +120,29 @@ else if((<HTMLInputElement>e.target).value=='reset'){
       (<HTMLInputElement>document.querySelector('#winnername')).value='';
   },2000)})
 }
-
+else if((<HTMLInputElement>e.target).value=='generate-cars'){
+  generateCar();}
 }
+async function generateCar(){
+  for(let i:number=0;i<10;i++){
+    let rand=Math.floor(Math.random() * mark.length);
+    let rand2=Math.floor(Math.random() * mark.length);
+    let rand3=Math.floor(Math.random() * colors.length);
+
+    let data={name: `${mark[rand]} ${model[rand2]}`, color: `${colors[rand3]}`};
+    const response = await fetch(
+      `http://127.0.0.1:3000/garage`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      }
+    )
+  }
+}
+
 async function createcar(e:Event){
     let data={name: (<HTMLInputElement>document.querySelector('#name')).value, color: (<HTMLInputElement>document.querySelector('#color')).value};
       const response = await fetch(
@@ -158,4 +182,5 @@ export  {getAction};
 export  {startrace};
 export  {createcar};
 export  {updatecar};
+export  {generateCar};
 
