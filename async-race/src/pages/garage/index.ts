@@ -1,5 +1,8 @@
 import BaseComponent from '../../core/templates/component';
-
+import {getAction} from '../../core/logic/garage';
+import {startrace} from '../../core/logic/garage';
+import { createcar } from '../../core/logic/garage';
+import { updatecar } from '../../core/logic/garage';
 
 import { obj2 } from '../../core/types';
 import { Response2 } from '../../core/types';
@@ -78,11 +81,11 @@ class GaragePage extends BaseComponent {
     const main=new BaseComponent('main').render(this);
     const form1=new BaseComponent('form').setAttribute('id','create').setClass('garage-settings').setHTML(`<input type="text" id="name">
     <input type="color" id="color" value="#ffffff">
-    <input type="button" class="btn btn-1" value="create">`).render(main);
-    const form2=new BaseComponent('form').setAttribute('id','update').setClass('garage-settings').setHTML(`<input type="text" id="newname">
+    <input type="button" class="btn btn-1" value="create">`).setHandler('click',(e)=>{this.addNewCar(e)}).render(main);
+    const form2=new BaseComponent('form').setAttribute('id','update').setHandler('click',(e)=>{this.updateCar(e)}).setClass('garage-settings').setHTML(`<input type="text" id="newname">
     <input type="color" id="newcolor" value="#ffffff">
     <input type="button" class="btn btn-2" value="update">`).render(main);
-    const raceblock:HTMLElement=new BaseComponent('div').setClass('garage-settings').setHTML(`<input type="button" id="race" class="btn" value="race">
+    const raceblock:HTMLElement=new BaseComponent('div').setClass('garage-settings').setHandler('click',(e)=>startrace(raceblock,e)).setHTML(`<input type="button" id="race" class="btn" value="race">
     <input type="button" id="reset" class="btn" value="reset">
     <input type="button" id="generate" class="btn btn-1" value="generate-cars"><input id="winnername" class="hidden" type="text" value="">`).render(main);
     const countblock=new BaseComponent('div').setClass('garage-settings').setHTML(`<h1>${title}</h1>`).render(main);
@@ -96,7 +99,31 @@ class GaragePage extends BaseComponent {
       new BaseComponent('div').setClass('wow').render(main);
 
   }
-  
+  addNewCar(e:Event){
+    if((<HTMLInputElement>e.target).value=='create'){
+      Promise.resolve(createcar(e)).then(()=>{
+      this.tracks.innerHTML=``;
+      this.renderGarage(this.tracks,this.count);});
+    }
+  }
+  updateCar(e:Event){
+    if((<HTMLInputElement>e.target).value=='update'){
+      Promise.resolve(updatecar(e)).then(()=>{
+      this.tracks.innerHTML=``;
+      this.renderGarage(this.tracks,this.count);});
+    }
+  }
+  action(e:Event){
+    if((<HTMLInputElement>e.target).value=='remove'){
+      Promise.resolve(getAction(e)).then(()=>{
+        setTimeout(()=>{this.tracks.innerHTML=``;
+        this.renderGarage(this.tracks,this.count);},1000);
+    });
+    }
+    else{
+      Promise.resolve(getAction(e));
+    }
+  }
 
   async getResponse() {
     const response = await fetch(
@@ -114,7 +141,7 @@ class GaragePage extends BaseComponent {
       count.innerHTML=`(${Number(key)+1})`;
       // (<HTMLElement>document.querySelector('.count')).innerHTML=`(${Number(key)+1})`;
     const track=new BaseComponent('div').setClass('track').render(tracks);
-        new BaseComponent('div').setClass('track-buttons').setHTML(`<input id="start" type="button" class="btn btn-1" value="start">
+        new BaseComponent('div').setClass('track-buttons').setHandler('click',(e)=>this.action(e)).setHTML(`<input id="start" type="button" class="btn btn-1" value="start">
         <input type="button" class="btn btn-2" value="stop">
         <input type="button" class="btn btn-1" value="select">
         <input id='${result[key].id}' type="button" class="btn btn-1" value="remove">
