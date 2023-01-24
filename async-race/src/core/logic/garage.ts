@@ -177,7 +177,7 @@ async function updatecar(e:Event){
 
 async function createwinner(id:number,wins:number,time:number){
   getwinner(id).then((result)=>{
-    setTimeout(()=>{Winners.renderWinners();
+    setTimeout(()=>{Winners.renderWinners(1,'id','ASC');
       if(result.id){
         if(time<result.time){
           updatewinner(id,result.wins+1,time);

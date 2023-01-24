@@ -70,17 +70,17 @@ class WinnersPage extends BaseComponent {
     const countblock=new BaseComponent('div').setClass('garage-settings').setHTML(`<h1>${title}</h1`).render(main);
     this.count=new BaseComponent('span').setClass('count').setContent(``).render(countblock);
     new BaseComponent('div').setClass('garage-settings').setHTML(`Page # <span class="page">1</span>`).render(main);
-    const table=new BaseComponent('table').setHandler('load',getWinners).setClass('table').setHTML(`<thead class="table-head">
+    const table=new BaseComponent('table').setClass('table').setHandler('click',(e)=>{this.sortCar(e)}).setHTML(`<thead class="table-head">
     <tr>
-      <th id="num">№</id=></th>
-      <th id="car">Car</id=></th>
-      <th id="name">Name</id=></th>
-      <th id="win">Wins</id=></th>
-      <th id="time">Best time</id=></th>
+      <th id="num" sort="">№</id=></th>
+      <th id="car" sort="">Car</id=></th>
+      <th id="name" sort="">Name</id=></th>
+      <th id="win" sort="">Wins</id=></th>
+      <th id="time" sort="">Best time</id=></th>
     </tr>
   </thead>`).render(main);
   this.tbody=new BaseComponent('tbody').setClass('table-body').setHTML('').render(table);
-  this.renderWinners();
+  this.renderWinners(1,'id','ASC');
 
 
   const pagination= new BaseComponent('div').setClass('pagination').setHTML(`<input type="button" class="btn btn-page" value="Prev">
@@ -89,7 +89,7 @@ class WinnersPage extends BaseComponent {
   }
 
 
-  renderWinners(){
+  renderWinners(page:number,sort:string,order:string){
     this.tbody.innerHTML=``;
     (async function getResponse() {
       let data:TGarage;
@@ -107,7 +107,7 @@ class WinnersPage extends BaseComponent {
         garageObj[id]={'name':garage[i].name,color:garage[i].color};
       }
     
-      getWinners().then((result)=>{
+      getWinners(page,sort,order).then((result)=>{
         this.count.innerHTML=`(${result.length})`;
         for(let i:number=0;i<result.length;i++){
           new BaseComponent('tr').setHTML(`<tr>
@@ -125,6 +125,29 @@ class WinnersPage extends BaseComponent {
        
       
       });
+  }
+
+  sortCar(e:Event){
+    if((<HTMLElement>e.target).id=='win'){
+      if((<HTMLElement>e.target).getAttribute('sort')=='' || (<HTMLElement>e.target).getAttribute('sort')=='DESC'){
+        (<HTMLElement>e.target).setAttribute('sort','ASC');
+        this.renderWinners(1,'wins','ASC');
+      }
+      else{
+        (<HTMLElement>e.target).setAttribute('sort','DESC');
+        this.renderWinners(1,'wins','DESC');
+      }
+    }
+    else if((<HTMLElement>e.target).id=='time'){
+      if((<HTMLElement>e.target).getAttribute('sort')=='' || (<HTMLElement>e.target).getAttribute('sort')=='DESC'){
+        (<HTMLElement>e.target).setAttribute('sort','ASC');
+        this.renderWinners(1,'time','ASC');
+      }
+      else{
+        (<HTMLElement>e.target).setAttribute('sort','DESC');
+        this.renderWinners(1,'time','DESC');
+      }
+    }
   }
 }
 
