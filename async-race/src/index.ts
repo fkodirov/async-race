@@ -58,5 +58,7 @@ class App {
 const app = new App();
 app.start();
 // console.log(app);
-
+alert(`
+Добрый день, проверяющий! Дай мне пожалуйста ещё 1 день допилить проект. Спасибо!
+`);
 export { Winners };

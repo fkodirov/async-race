@@ -132,7 +132,7 @@ async function generateCar(){
     let rand3=Math.floor(Math.random() * colors.length);
 
     let data={name: `${mark[rand]} ${model[rand2]}`, color: `${colors[rand3]}`};
-    const response = await fetch(
+    await fetch(
       `http://127.0.0.1:3000/garage`,
       {
         method: 'POST',
