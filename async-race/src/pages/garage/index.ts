@@ -132,7 +132,12 @@ class GaragePage extends BaseComponent {
         let countcar=(<HTMLElement>this.count).innerHTML;
         if((Number(countcar)-1)%7==0){
         this.renderGarage(this.tracks,this.count,Number(this.getpage())-1);
-        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()-1}`;}
+        if(7*this.getpage()<Number(countcar)){
+          (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()}`;
+        }
+        else{
+          (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()-1}`;
+        }}
         else{this.renderGarage(this.tracks,this.count,this.getpage())}},1000);
     });
     }
