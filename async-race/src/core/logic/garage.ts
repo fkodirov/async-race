@@ -33,6 +33,7 @@ function getAction(e:Event){
   })(); } 
 }
 else if((<HTMLInputElement>e.target).value=='remove'){
+  deletewinner(Number((<HTMLElement>e.target).id)).finally(()=>{Winners.renderWinners(1,'id','ASC');});
 (async function deletecar(){
       await fetch(
         `http://127.0.0.1:3000/garage/${(<HTMLElement>e.target).id}`,
@@ -230,6 +231,14 @@ async function updatewinner(id:number,wins:number,time:number){
       }
     )
     
+}
+async function deletewinner(id:number){
+  await fetch(
+    `http://127.0.0.1:3000/winners/${id}`,
+    {
+      method: 'DELETE',
+    }
+  );
 }
 
 
