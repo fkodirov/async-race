@@ -113,9 +113,9 @@ class WinnersPage extends BaseComponent {
           new BaseComponent('tr').setHTML(`<tr>
           <td>${i+1}</td>
           <td>
-          <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[garage[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
+          <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[result[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
           </td>
-          <td>${garageObj[garage[i].id].name}</td>
+          <td>${garageObj[result[i].id].name}</td>
           <td>${result[i].wins}</td>
           <td>${result[i].time.toFixed(2)}</td>
         </tr>`).render(this.tbody);
