@@ -108,17 +108,32 @@ async function startrace(e:Event){
   if((<HTMLInputElement>e.target).value=='race'){
     (<HTMLInputElement>e.target).setAttribute('disabled','disabled');
     const count=document.querySelectorAll('#start');
+    const stopbuttons=document.querySelectorAll('[value="stop"]');
+    const selectbuttons=document.querySelectorAll('[value="select"]');
+    const removebuttons=document.querySelectorAll('[value="remove"]');
     const index=Array.from(count).indexOf(<HTMLElement>e.target);
     // (<HTMLInputElement>count[1]).click();
 
   await Promise.allSettled([count.forEach((e)=>(<HTMLInputElement>e).click())])
+  count.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+  selectbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+  removebuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+  stopbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
   
 }
 else if((<HTMLInputElement>e.target).value=='reset'){
-  const count=document.querySelectorAll('[value="stop"]');
-  await Promise.allSettled([count.forEach((e)=>(<HTMLInputElement>e).click())])
-  .then(()=>{(<HTMLElement>document.querySelector('.wow')).style.display='none';
+    const stopbuttons=document.querySelectorAll('[value="stop"]');
+    const selectbuttons=document.querySelectorAll('[value="select"]');
+    const removebuttons=document.querySelectorAll('[value="remove"]');
+    const startbuttons=document.querySelectorAll('[value="start"]');
+      selectbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      removebuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      stopbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      startbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+  await Promise.allSettled([stopbuttons.forEach((e)=>(<HTMLInputElement>e).click())])
+  .then(()=>{
     setTimeout(()=>{
+      (<HTMLElement>document.querySelector('.wow')).style.display='none';
       (<HTMLInputElement>document.querySelector('[value="race"]')).removeAttribute('disabled');
       (<HTMLInputElement>document.querySelector('#winnername')).value='';
   },2000)})
@@ -129,7 +144,7 @@ else if((<HTMLInputElement>e.target).value=='generate-cars'){
 async function generateCar(){
   for(let i:number=0;i<100;i++){
     let rand=Math.floor(Math.random() * mark.length);
-    let rand2=Math.floor(Math.random() * mark.length);
+    let rand2=Math.floor(Math.random() * model.length);
     let rand3=Math.floor(Math.random() * colors.length);
 
     let data={name: `${mark[rand]} ${model[rand2]}`, color: `${colors[rand3]}`};

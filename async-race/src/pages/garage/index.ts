@@ -147,12 +147,15 @@ class GaragePage extends BaseComponent {
   }
   action2(e:Event){
     if((<HTMLInputElement>e.target).value=='generate-cars'){
+      (<HTMLInputElement>e.target).setAttribute('disabled','disabled');
       startrace(e)
       setTimeout(()=>{
         this.tracks.innerHTML=``;
       (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
       this.renderGarage(this.tracks,this.count,this.getpage());
-      },5500)}
+      (<HTMLInputElement>e.target).removeAttribute('disabled');
+      },5500);
+      }
     else{
       startrace(e);
       }
