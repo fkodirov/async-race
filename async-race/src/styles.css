@@ -70,6 +70,7 @@ div, span{
 }
 .car{
   position: absolute;
+  top: 8px;
 }
 .hidden{
   display: none;
@@ -117,4 +118,7 @@ div, span{
   width: 100%;
   max-width: 500px;
   text-align: center;
+}
+#win, #time, .btn{
+  cursor: pointer;
 }
