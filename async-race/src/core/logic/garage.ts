@@ -60,9 +60,9 @@ else if((<HTMLInputElement>e.target).value=='select'){
     function startAnimation(distance:number,velocity:number,index:number){
       const stops = document.querySelectorAll("[value='stop']");
         (<HTMLInputElement>(stops[index])).onclick=function(){
-          (<HTMLInputElement>document.querySelectorAll('[value="start"]')[index]).removeAttribute('disabled');
-          (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).removeAttribute('disabled');
-          (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).removeAttribute('disabled');
+          // (<HTMLInputElement>document.querySelectorAll('[value="start"]')[index]).removeAttribute('disabled');
+          // (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).removeAttribute('disabled');
+          // (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).removeAttribute('disabled');
 
           if((<HTMLInputElement>document.querySelector('[value="prev"]')).hasAttribute('disabled')){
             (<HTMLInputElement>document.querySelector('[value="next"]')).removeAttribute('disabled');
@@ -141,17 +141,17 @@ else if((<HTMLInputElement>e.target).value=='reset'){
     const selectbuttons=document.querySelectorAll('[value="select"]');
     const removebuttons=document.querySelectorAll('[value="remove"]');
     const startbuttons=document.querySelectorAll('[value="start"]');
-      // selectbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
-      // removebuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      selectbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      removebuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
       stopbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
-      // startbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      startbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
   await Promise.allSettled([stopbuttons.forEach((e)=>(<HTMLInputElement>e).click())])
   .then(()=>{
     setTimeout(()=>{
       (<HTMLElement>document.querySelector('.wow')).style.display='none';
       (<HTMLInputElement>document.querySelector('[value="race"]')).removeAttribute('disabled');
       (<HTMLInputElement>document.querySelector('#winnername')).value='';
-  },2000)})
+  },2300)})
 }
 else if((<HTMLInputElement>e.target).value=='generate-cars'){
   generateCar();}
