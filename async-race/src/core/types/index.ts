@@ -4,11 +4,11 @@ export interface TGarage {
   id: number;
 }
 
-export type TWinners ={
+export type TWinners =[{
   id: number;
-  winds: number;
+  wins: number;
   time: number;
-}
+}]
 
 export interface obj {
   name: string;

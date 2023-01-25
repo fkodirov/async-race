@@ -1,13 +1,16 @@
 import { TWinners } from "../types";
   async function getWinners(page:number,sort:string,order:string){
-      let data:TWinners;
+      let result:TWinners;
+      let total:string;
       const response = await fetch(
-        `http://127.0.0.1:3000/winners?_page=1&_sort=${sort}&_order=${order}`,
+        `http://127.0.0.1:3000/winners?_page=${page}&_sort=${sort}&_order=${order}&_limit=10`,
         {
           method: 'GET',
         }
       );
-       return data = await response.json();
+      total=String(response.headers.get('X-Total-Count'));
+      result = await response.json();
+       return {result,total}
   }
 
 export default getWinners;

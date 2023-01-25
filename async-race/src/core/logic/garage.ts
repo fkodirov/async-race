@@ -11,6 +11,9 @@ function getAction(e:Event){
     // console.log(count.length);
     // console.log(index);
   if((<HTMLInputElement>e.target).value=='start'){
+    (<HTMLInputElement>e.target).setAttribute('disabled','disabled');
+    (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).setAttribute('disabled','disabled');
+    (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).setAttribute('disabled','disabled');
     let data:{velocity:number,distance:number};
     async function start (){
       const response = await fetch(
@@ -53,6 +56,9 @@ else if((<HTMLInputElement>e.target).value=='select'){
     function startAnimation(distance:number,velocity:number,index:number){
       const stops = document.querySelectorAll("[value='stop']");
         (<HTMLInputElement>(stops[index])).onclick=function(){
+          (<HTMLInputElement>document.querySelectorAll('[value="start"]')[index]).removeAttribute('disabled');
+          (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).removeAttribute('disabled');
+          (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).removeAttribute('disabled');
           (async ()=>{ await fetch(`http://127.0.0.1:3000/engine?id=${index+1}&status=stopped`, {
             method: 'PATCH'
             }).then(()=>{
@@ -115,10 +121,10 @@ async function startrace(e:Event){
     // (<HTMLInputElement>count[1]).click();
 
   await Promise.allSettled([count.forEach((e)=>(<HTMLInputElement>e).click())])
-  count.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
-  selectbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
-  removebuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
-  stopbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+  // count.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+  // selectbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+  // removebuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+   stopbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
   
 }
 else if((<HTMLInputElement>e.target).value=='reset'){
@@ -126,10 +132,10 @@ else if((<HTMLInputElement>e.target).value=='reset'){
     const selectbuttons=document.querySelectorAll('[value="select"]');
     const removebuttons=document.querySelectorAll('[value="remove"]');
     const startbuttons=document.querySelectorAll('[value="start"]');
-      selectbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
-      removebuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      // selectbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      // removebuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
       stopbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
-      startbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
+      // startbuttons.forEach((e)=>(<HTMLInputElement>e).removeAttribute('disabled'));
   await Promise.allSettled([stopbuttons.forEach((e)=>(<HTMLInputElement>e).click())])
   .then(()=>{
     setTimeout(()=>{

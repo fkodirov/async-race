@@ -83,7 +83,7 @@ class WinnersPage extends BaseComponent {
   this.renderWinners(1,'id','ASC');
 
 
-  const pagination= new BaseComponent('div').setClass('pagination').setHTML(`<input type="button" class="btn btn-page" value="Prev">
+  const pagination= new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="Prev">
   <input type="button" class="btn btn-page" value="Next">`).render(main);
 
   }
@@ -106,12 +106,13 @@ class WinnersPage extends BaseComponent {
         let id:number=garage[i].id;
         garageObj[id]={'name':garage[i].name,color:garage[i].color};
       }
-    
-      getWinners(page,sort,order).then((result)=>{
-        this.count.innerHTML=`(${result.length})`;
+      getWinners(page,sort,order).then(({result,total})=>{
+        // console.log(result.headers.get('X-Total-Count'));
+        this.count.innerHTML=total;
+        // this.count.innerHTML=`(${result.length})`;
         for(let i:number=0;i<result.length;i++){
           new BaseComponent('tr').setHTML(`<tr>
-          <td>${i+1}</td>
+          <td>${(this.getpage()-1)*10+i+1}</td>
           <td>
           <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[result[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
           </td>
@@ -120,6 +121,8 @@ class WinnersPage extends BaseComponent {
           <td>${result[i].time.toFixed(2)}</td>
         </tr>`).render(this.tbody);
         }
+      //   new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="prev">
+      // <input type="button" class="btn btn-page" value="next">`).renderAfter(this.tbody);
     });
     
        
@@ -129,8 +132,10 @@ class WinnersPage extends BaseComponent {
 
   sortCar(e:Event){
     if((<HTMLElement>e.target).id=='win'){
+      (<HTMLElement>document.querySelector('.page')).innerHTML='1';
       if((<HTMLElement>e.target).getAttribute('sort')=='' || (<HTMLElement>e.target).getAttribute('sort')=='DESC'){
         (<HTMLElement>e.target).setAttribute('sort','ASC');
+        (<HTMLElement>(document.querySelector('#time'))).setAttribute('sort','');
         this.renderWinners(1,'wins','ASC');
       }
       else{
@@ -139,8 +144,10 @@ class WinnersPage extends BaseComponent {
       }
     }
     else if((<HTMLElement>e.target).id=='time'){
+      (<HTMLElement>document.querySelector('.page')).innerHTML='1';
       if((<HTMLElement>e.target).getAttribute('sort')=='' || (<HTMLElement>e.target).getAttribute('sort')=='DESC'){
         (<HTMLElement>e.target).setAttribute('sort','ASC');
+        (<HTMLElement>(document.querySelector('#win'))).setAttribute('sort','');
         this.renderWinners(1,'time','ASC');
       }
       else{
@@ -148,6 +155,52 @@ class WinnersPage extends BaseComponent {
         this.renderWinners(1,'time','DESC');
       }
     }
+  }
+  getpage(){
+    let page;
+    if((<HTMLElement>document.querySelector('.page'))){
+        page=(<HTMLElement>document.querySelector('.page'))?.innerHTML;
+        return page=Number(page);
+    }
+    else {
+        return page=1;
+    }
+  }
+
+  pagination(e:Event){
+    setTimeout(()=>{
+      let sort:string;let order:string;
+        // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+        if((<HTMLElement>(document.querySelector('#time'))).getAttribute('sort')=='' && (<HTMLElement>(document.querySelector('#win'))).getAttribute('sort')==''){
+          sort='id'; order='DESC';
+        }
+        else if((<HTMLElement>(document.querySelector('#time'))).getAttribute('sort')!=''){
+          sort='time'; order=String((<HTMLElement>(document.querySelector('#time'))).getAttribute('sort'));
+        }
+        else if((<HTMLElement>(document.querySelector('#win'))).getAttribute('sort')!=''){
+          sort='wins'; order=String((<HTMLElement>(document.querySelector('#win'))).getAttribute('sort'));
+        }
+        else{
+          sort='id'; order='ASC';
+        }
+
+    if((<HTMLInputElement>e.target).value=='Next'){
+      if(10*this.getpage()<Number(this.count.innerHTML.replace(/[^0-9]/g, ''))){
+        this.tbody.innerHTML=``;
+        
+        this.renderWinners(this.getpage()+1,sort,order);
+        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()+1}`;
+      }
+    }
+    else if((<HTMLInputElement>e.target).value=='Prev'){
+      if(this.getpage()>1){
+        this.tbody.innerHTML=``;
+        // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+        this.renderWinners(this.getpage()-1,sort,order);
+        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()-1}`;
+      }
+    }
+      },1000);
   }
 }
 
