@@ -112,7 +112,7 @@ class WinnersPage extends BaseComponent {
         // this.count.innerHTML=`(${result.length})`;
         for(let i:number=0;i<result.length;i++){
           new BaseComponent('tr').setHTML(`<tr>
-          <td>${(this.getpage()-1)*10+i+1}</td>
+          <td>${(<HTMLElement>document.querySelector('#num'))?(this.getpage()-1)*10+i+1:i+1}</td>
           <td>
           <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[result[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
           </td>
