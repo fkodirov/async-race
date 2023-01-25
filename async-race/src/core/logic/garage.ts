@@ -14,6 +14,10 @@ function getAction(e:Event){
     (<HTMLInputElement>e.target).setAttribute('disabled','disabled');
     (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).setAttribute('disabled','disabled');
     (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).setAttribute('disabled','disabled');
+    if(!(<HTMLInputElement>document.querySelector('[value="next"]')).hasAttribute('disabled')){
+      (<HTMLInputElement>document.querySelector('[value="next"]')).setAttribute('disabled','disabled');
+      (<HTMLInputElement>document.querySelector('[value="prev"]')).setAttribute('disabled','disabled');
+    }
     let data:{velocity:number,distance:number};
     async function start (){
       const response = await fetch(
@@ -59,6 +63,11 @@ else if((<HTMLInputElement>e.target).value=='select'){
           (<HTMLInputElement>document.querySelectorAll('[value="start"]')[index]).removeAttribute('disabled');
           (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).removeAttribute('disabled');
           (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).removeAttribute('disabled');
+
+          if((<HTMLInputElement>document.querySelector('[value="prev"]')).hasAttribute('disabled')){
+            (<HTMLInputElement>document.querySelector('[value="next"]')).removeAttribute('disabled');
+            (<HTMLInputElement>document.querySelector('[value="prev"]')).removeAttribute('disabled');
+          }
           (async ()=>{ await fetch(`http://127.0.0.1:3000/engine?id=${index+1}&status=stopped`, {
             method: 'PATCH'
             }).then(()=>{
