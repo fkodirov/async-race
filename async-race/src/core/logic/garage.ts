@@ -1,9 +1,9 @@
 import GaragePage from "../../pages/garage";
 import { Winners } from "../..";
-import mark from "../cars/mark";
-import model from "../cars/mark";
-import colors from "../cars/colors";
-import { json } from "body-parser";
+import mark from "../constants/mark";
+import model from "../constants/mark";
+import colors from "../constants/colors";
+// import { json } from "body-parser";
 
 function getAction(e:Event){
   const count=document.querySelectorAll(`[value="${(<HTMLInputElement>e.target).value}"]`);
