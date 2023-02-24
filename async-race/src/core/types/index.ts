@@ -17,6 +17,16 @@ export interface obj {
   color: string;
 }
 
+export interface options {
+  distance: number;
+  velocity: number;
+}
+
+export interface props {
+  name: string;
+  color: string;
+}
+
 export interface Response {
   [key: number]: obj;
 }

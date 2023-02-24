@@ -1,7 +1,8 @@
-import BaseComponent from '../../core/templates/component';
-import getWinners from '../../core/logic/winners';
-import { TGarage } from '../../core/types';
-import { Response } from '../../core/types';
+import BaseComponent from "../../core/templates/component";
+import getWinners from "../../core/logic/winners";
+import { TGarage } from "../../core/types";
+import { Response } from "../../core/types";
+import Api from "../../core/components/api/api";
 
 const cars = [
   `<path fill-rule="evenodd" d="m2.2 125.4c0.9-4.5 2.2-9.9 2.2-9.9l-0.2-11.8c0 0 7.5-3.8 7.8-5.6 0.2-1.8 1.1-23.1 3.5-26.8 
@@ -62,30 +63,31 @@ const cars = [
 
 class WinnersPage extends BaseComponent {
   tbody: HTMLElement;
-
+  api: Api;
   count: HTMLElement;
 
   constructor(title: string, content: string) {
-    super('main');
+    super("main");
     // const nav= new BaseComponent('nav').render(this);
     // const nav1=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Garage').render(nav);
     // const nav2=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Winners').render(nav);
-    const main = new BaseComponent('main').render(this);
-    const countblock = new BaseComponent('div')
-      .setClass('garage-settings')
+    this.api = new Api();
+    const main = new BaseComponent("main").render(this);
+    const countblock = new BaseComponent("div")
+      .setClass("garage-settings")
       .setHTML(`<h1>${title}</h1`)
       .render(main);
-    this.count = new BaseComponent('span')
-      .setClass('count')
-      .setContent('')
+    this.count = new BaseComponent("span")
+      .setClass("count")
+      .setContent("")
       .render(countblock);
-    new BaseComponent('div')
-      .setClass('garage-settings')
+    new BaseComponent("div")
+      .setClass("garage-settings")
       .setHTML('Page # <span class="page">1</span>')
       .render(main);
-    const table = new BaseComponent('table')
-      .setClass('table')
-      .setHandler('click', (e) => {
+    const table = new BaseComponent("table")
+      .setClass("table")
+      .setHandler("click", (e) => {
         this.sortCar(e);
       })
       .setHTML(
@@ -100,15 +102,15 @@ class WinnersPage extends BaseComponent {
   </thead>`
       )
       .render(main);
-    this.tbody = new BaseComponent('tbody')
-      .setClass('table-body')
-      .setHTML('')
+    this.tbody = new BaseComponent("tbody")
+      .setClass("table-body")
+      .setHTML("")
       .render(table);
-    this.renderWinners(1, 'id', 'ASC');
+    this.renderWinners(1, "id", "ASC");
 
-    const pagination = new BaseComponent('div')
-      .setClass('pagination')
-      .setHandler('click', (e) => {
+    const pagination = new BaseComponent("div")
+      .setClass("pagination")
+      .setHandler("click", (e) => {
         this.pagination(e);
       })
       .setHTML(
@@ -119,14 +121,8 @@ class WinnersPage extends BaseComponent {
   }
 
   renderWinners(page: number, sort: string, order: string) {
-    this.tbody.innerHTML = '';
-    (async function getResponse() {
-      let data: TGarage;
-      const response = await fetch('http://127.0.0.1:3000/garage', {
-        method: 'GET',
-      });
-      return (data = await response.json());
-    })().then((garage) => {
+    this.tbody.innerHTML = "";
+    this.api.getAllCars().then((garage) => {
       const garageObj: Response = {};
       for (let i = 0; i < garage.length; i++) {
         const id: number = garage[i].id;
@@ -137,11 +133,11 @@ class WinnersPage extends BaseComponent {
         this.count.innerHTML = total;
         // this.count.innerHTML=`(${result.length})`;
         for (let i = 0; i < result.length; i++) {
-          new BaseComponent('tr')
+          new BaseComponent("tr")
             .setHTML(
               `<tr>
           <td>${
-            <HTMLElement>document.querySelector('#num')
+            <HTMLElement>document.querySelector("#num")
               ? (this.getpage() - 1) * 10 + i + 1
               : i + 1
           }</td>
@@ -164,39 +160,39 @@ class WinnersPage extends BaseComponent {
   }
 
   sortCar(e: Event) {
-    if ((<HTMLElement>e.target).id == 'win') {
-      (<HTMLElement>document.querySelector('.page')).innerHTML = '1';
+    if ((<HTMLElement>e.target).id == "win") {
+      (<HTMLElement>document.querySelector(".page")).innerHTML = "1";
       if (
-        (<HTMLElement>e.target).getAttribute('sort') == '' ||
-        (<HTMLElement>e.target).getAttribute('sort') == 'DESC'
+        (<HTMLElement>e.target).getAttribute("sort") == "" ||
+        (<HTMLElement>e.target).getAttribute("sort") == "DESC"
       ) {
-        (<HTMLElement>e.target).setAttribute('sort', 'ASC');
-        (<HTMLElement>document.querySelector('#time')).setAttribute('sort', '');
-        this.renderWinners(1, 'wins', 'ASC');
+        (<HTMLElement>e.target).setAttribute("sort", "ASC");
+        (<HTMLElement>document.querySelector("#time")).setAttribute("sort", "");
+        this.renderWinners(1, "wins", "ASC");
       } else {
-        (<HTMLElement>e.target).setAttribute('sort', 'DESC');
-        this.renderWinners(1, 'wins', 'DESC');
+        (<HTMLElement>e.target).setAttribute("sort", "DESC");
+        this.renderWinners(1, "wins", "DESC");
       }
-    } else if ((<HTMLElement>e.target).id == 'time') {
-      (<HTMLElement>document.querySelector('.page')).innerHTML = '1';
+    } else if ((<HTMLElement>e.target).id == "time") {
+      (<HTMLElement>document.querySelector(".page")).innerHTML = "1";
       if (
-        (<HTMLElement>e.target).getAttribute('sort') == '' ||
-        (<HTMLElement>e.target).getAttribute('sort') == 'DESC'
+        (<HTMLElement>e.target).getAttribute("sort") == "" ||
+        (<HTMLElement>e.target).getAttribute("sort") == "DESC"
       ) {
-        (<HTMLElement>e.target).setAttribute('sort', 'ASC');
-        (<HTMLElement>document.querySelector('#win')).setAttribute('sort', '');
-        this.renderWinners(1, 'time', 'ASC');
+        (<HTMLElement>e.target).setAttribute("sort", "ASC");
+        (<HTMLElement>document.querySelector("#win")).setAttribute("sort", "");
+        this.renderWinners(1, "time", "ASC");
       } else {
-        (<HTMLElement>e.target).setAttribute('sort', 'DESC');
-        this.renderWinners(1, 'time', 'DESC');
+        (<HTMLElement>e.target).setAttribute("sort", "DESC");
+        this.renderWinners(1, "time", "DESC");
       }
     }
   }
 
   getpage() {
     let page;
-    if (<HTMLElement>document.querySelector('.page')) {
-      page = (<HTMLElement>document.querySelector('.page'))?.innerHTML;
+    if (<HTMLElement>document.querySelector(".page")) {
+      page = (<HTMLElement>document.querySelector(".page"))?.innerHTML;
       return (page = Number(page));
     } else {
       return (page = 1);
@@ -209,50 +205,50 @@ class WinnersPage extends BaseComponent {
       let order: string;
       // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
       if (
-        (<HTMLElement>document.querySelector('#time')).getAttribute('sort') ==
-          '' &&
-        (<HTMLElement>document.querySelector('#win')).getAttribute('sort') == ''
+        (<HTMLElement>document.querySelector("#time")).getAttribute("sort") ==
+          "" &&
+        (<HTMLElement>document.querySelector("#win")).getAttribute("sort") == ""
       ) {
-        sort = 'id';
-        order = 'DESC';
+        sort = "id";
+        order = "DESC";
       } else if (
-        (<HTMLElement>document.querySelector('#time')).getAttribute('sort') !=
-        ''
+        (<HTMLElement>document.querySelector("#time")).getAttribute("sort") !=
+        ""
       ) {
-        sort = 'time';
+        sort = "time";
         order = String(
-          (<HTMLElement>document.querySelector('#time')).getAttribute('sort')
+          (<HTMLElement>document.querySelector("#time")).getAttribute("sort")
         );
       } else if (
-        (<HTMLElement>document.querySelector('#win')).getAttribute('sort') != ''
+        (<HTMLElement>document.querySelector("#win")).getAttribute("sort") != ""
       ) {
-        sort = 'wins';
+        sort = "wins";
         order = String(
-          (<HTMLElement>document.querySelector('#win')).getAttribute('sort')
+          (<HTMLElement>document.querySelector("#win")).getAttribute("sort")
         );
       } else {
-        sort = 'id';
-        order = 'ASC';
+        sort = "id";
+        order = "ASC";
       }
 
-      if ((<HTMLInputElement>e.target).value == 'Next') {
+      if ((<HTMLInputElement>e.target).value == "Next") {
         if (
           10 * this.getpage() <
-          Number(this.count.innerHTML.replace(/[^0-9]/g, ''))
+          Number(this.count.innerHTML.replace(/[^0-9]/g, ""))
         ) {
-          this.tbody.innerHTML = '';
+          this.tbody.innerHTML = "";
 
           this.renderWinners(this.getpage() + 1, sort, order);
-          (<HTMLElement>document.querySelector('.page')).innerHTML = `${
+          (<HTMLElement>document.querySelector(".page")).innerHTML = `${
             this.getpage() + 1
           }`;
         }
-      } else if ((<HTMLInputElement>e.target).value == 'Prev') {
+      } else if ((<HTMLInputElement>e.target).value == "Prev") {
         if (this.getpage() > 1) {
-          this.tbody.innerHTML = '';
+          this.tbody.innerHTML = "";
           // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
           this.renderWinners(this.getpage() - 1, sort, order);
-          (<HTMLElement>document.querySelector('.page')).innerHTML = `${
+          (<HTMLElement>document.querySelector(".page")).innerHTML = `${
             this.getpage() - 1
           }`;
         }
