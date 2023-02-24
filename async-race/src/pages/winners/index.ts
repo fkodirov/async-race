@@ -3,7 +3,8 @@ import getWinners from '../../core/logic/winners';
 import { TGarage } from '../../core/types';
 import { Response } from '../../core/types';
 
-const cars=[`<path fill-rule="evenodd" d="m2.2 125.4c0.9-4.5 2.2-9.9 2.2-9.9l-0.2-11.8c0 0 7.5-3.8 7.8-5.6 0.2-1.8 1.1-23.1 3.5-26.8 
+const cars = [
+  `<path fill-rule="evenodd" d="m2.2 125.4c0.9-4.5 2.2-9.9 2.2-9.9l-0.2-11.8c0 0 7.5-3.8 7.8-5.6 0.2-1.8 1.1-23.1 3.5-26.8 
   2.5-3.8-1.1-17.1-1.1-17.1h17.4c0 0 17.6-15.1 30-20.7 0 0 2-8.7-5.3-13.3l-0.2-2.7c0 0 16-2.2 37.3-3.8 0 0 7.3-7.9 18-9.1 
   10.7-1.2 135.3-10 166.2 13.4 30.9 23.4 53.1 39 53.1 39 0 0 126.9-0.8 157.2 31.6 0 0 0.4 11.1 0 16.9 0 0 3.1 5.3 7.3 6.6 
   4.3 1.3-1.1 8.8-1.1 8.8 0 0-8.9 4.8-9.5 11.6-0.7 6.9-18.1 15.6-26.3 21.6 0 0 5.2-58-44.5-62.4-49.7-4.5-53.2 59.1-53.2 
@@ -56,21 +57,39 @@ const cars=[`<path fill-rule="evenodd" d="m2.2 125.4c0.9-4.5 2.2-9.9 2.2-9.9l-0.
   0-16.3 13.3-29.5 29.7-29.5zm-9.6 6.3l9.6 16.4 8-16.4c-7.1-5.9-17.6 0-17.6 0zm6.2 23.2c0 2.2 1.8 3.9 4 3.9 2.2 0 4-1.7 4-3.9 
   0-2.2-1.8-3.9-4-3.9-2.2 0-4 1.7-4 3.9zm21-18.5l-10.2 16 18.2-0.4c2.1-9.1-8-15.6-8-15.6zm6.8 23.8l-19-0.4 9.7 15.3c8.9-2.8 
   9.3-14.9 9.3-14.9zm-15.6 19.1l-9.3-16.5-8.3 16.1c7 6.2 17.6 0.4 17.6 0.4zm-24.5-3.8l10.1-16.1-18.2 0.5c-2 9 8.1 15.6 8.1 
-  15.6zm9.3-23.6l-11.8-13.9c-8.3 4.1-7.1 16.1-7.1 16.1z"/>`];
+  15.6zm9.3-23.6l-11.8-13.9c-8.3 4.1-7.1 16.1-7.1 16.1z"/>`,
+];
 
 class WinnersPage extends BaseComponent {
-  tbody:HTMLElement;
-  count:HTMLElement;
+  tbody: HTMLElement;
+
+  count: HTMLElement;
+
   constructor(title: string, content: string) {
     super('main');
     // const nav= new BaseComponent('nav').render(this);
     // const nav1=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Garage').render(nav);
     // const nav2=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Winners').render(nav);
-    const main=new BaseComponent('main').render(this);
-    const countblock=new BaseComponent('div').setClass('garage-settings').setHTML(`<h1>${title}</h1`).render(main);
-    this.count=new BaseComponent('span').setClass('count').setContent(``).render(countblock);
-    new BaseComponent('div').setClass('garage-settings').setHTML(`Page # <span class="page">1</span>`).render(main);
-    const table=new BaseComponent('table').setClass('table').setHandler('click',(e)=>{this.sortCar(e)}).setHTML(`<thead class="table-head">
+    const main = new BaseComponent('main').render(this);
+    const countblock = new BaseComponent('div')
+      .setClass('garage-settings')
+      .setHTML(`<h1>${title}</h1`)
+      .render(main);
+    this.count = new BaseComponent('span')
+      .setClass('count')
+      .setContent('')
+      .render(countblock);
+    new BaseComponent('div')
+      .setClass('garage-settings')
+      .setHTML('Page # <span class="page">1</span>')
+      .render(main);
+    const table = new BaseComponent('table')
+      .setClass('table')
+      .setHandler('click', (e) => {
+        this.sortCar(e);
+      })
+      .setHTML(
+        `<thead class="table-head">
     <tr>
       <th id="num" sort="">№</id=></th>
       <th id="car" sort="">Car</id=></th>
@@ -78,129 +97,167 @@ class WinnersPage extends BaseComponent {
       <th id="win" sort="">Wins</id=></th>
       <th id="time" sort="">Best time</id=></th>
     </tr>
-  </thead>`).render(main);
-  this.tbody=new BaseComponent('tbody').setClass('table-body').setHTML('').render(table);
-  this.renderWinners(1,'id','ASC');
+  </thead>`
+      )
+      .render(main);
+    this.tbody = new BaseComponent('tbody')
+      .setClass('table-body')
+      .setHTML('')
+      .render(table);
+    this.renderWinners(1, 'id', 'ASC');
 
-
-  const pagination= new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="Prev">
-  <input type="button" class="btn btn-page" value="Next">`).render(main);
-
+    const pagination = new BaseComponent('div')
+      .setClass('pagination')
+      .setHandler('click', (e) => {
+        this.pagination(e);
+      })
+      .setHTML(
+        `<input type="button" class="btn btn-page" value="Prev">
+  <input type="button" class="btn btn-page" value="Next">`
+      )
+      .render(main);
   }
 
-
-  renderWinners(page:number,sort:string,order:string){
-    this.tbody.innerHTML=``;
+  renderWinners(page: number, sort: string, order: string) {
+    this.tbody.innerHTML = '';
     (async function getResponse() {
-      let data:TGarage;
-      const response = await fetch(
-        'http://127.0.0.1:3000/garage',
-        {
-          method: 'GET',
-        }
-      );
-      return data = await response.json(); 
-    })().then((garage)=>{
-      let garageObj:Response={};
-      for(let i:number=0;i<garage.length;i++){
-        let id:number=garage[i].id;
-        garageObj[id]={'name':garage[i].name,color:garage[i].color};
+      let data: TGarage;
+      const response = await fetch('http://127.0.0.1:3000/garage', {
+        method: 'GET',
+      });
+      return (data = await response.json());
+    })().then((garage) => {
+      const garageObj: Response = {};
+      for (let i = 0; i < garage.length; i++) {
+        const id: number = garage[i].id;
+        garageObj[id] = { name: garage[i].name, color: garage[i].color };
       }
-      getWinners(page,sort,order).then(({result,total})=>{
+      getWinners(page, sort, order).then(({ result, total }) => {
         // console.log(result.headers.get('X-Total-Count'));
-        this.count.innerHTML=total;
+        this.count.innerHTML = total;
         // this.count.innerHTML=`(${result.length})`;
-        for(let i:number=0;i<result.length;i++){
-          new BaseComponent('tr').setHTML(`<tr>
-          <td>${(<HTMLElement>document.querySelector('#num'))?(this.getpage()-1)*10+i+1:i+1}</td>
+        for (let i = 0; i < result.length; i++) {
+          new BaseComponent('tr')
+            .setHTML(
+              `<tr>
+          <td>${
+            <HTMLElement>document.querySelector('#num')
+              ? (this.getpage() - 1) * 10 + i + 1
+              : i + 1
+          }</td>
           <td>
-          <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${garageObj[result[i].id].color}" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
+          <svg class="winner-car" version="1.2" xmlns="http://www.w3.org/2000/svg" fill="${
+            garageObj[result[i].id].color
+          }" viewBox="0 0 500 180" width="70" height="26">${cars[0]}</svg>
           </td>
           <td>${garageObj[result[i].id].name}</td>
           <td>${result[i].wins}</td>
           <td>${result[i].time.toFixed(2)}</td>
-        </tr>`).render(this.tbody);
+        </tr>`
+            )
+            .render(this.tbody);
         }
-      //   new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="prev">
-      // <input type="button" class="btn btn-page" value="next">`).renderAfter(this.tbody);
-    });
-    
-       
-      
+        //   new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="prev">
+        // <input type="button" class="btn btn-page" value="next">`).renderAfter(this.tbody);
       });
+    });
   }
 
-  sortCar(e:Event){
-    if((<HTMLElement>e.target).id=='win'){
-      (<HTMLElement>document.querySelector('.page')).innerHTML='1';
-      if((<HTMLElement>e.target).getAttribute('sort')=='' || (<HTMLElement>e.target).getAttribute('sort')=='DESC'){
-        (<HTMLElement>e.target).setAttribute('sort','ASC');
-        (<HTMLElement>(document.querySelector('#time'))).setAttribute('sort','');
-        this.renderWinners(1,'wins','ASC');
+  sortCar(e: Event) {
+    if ((<HTMLElement>e.target).id == 'win') {
+      (<HTMLElement>document.querySelector('.page')).innerHTML = '1';
+      if (
+        (<HTMLElement>e.target).getAttribute('sort') == '' ||
+        (<HTMLElement>e.target).getAttribute('sort') == 'DESC'
+      ) {
+        (<HTMLElement>e.target).setAttribute('sort', 'ASC');
+        (<HTMLElement>document.querySelector('#time')).setAttribute('sort', '');
+        this.renderWinners(1, 'wins', 'ASC');
+      } else {
+        (<HTMLElement>e.target).setAttribute('sort', 'DESC');
+        this.renderWinners(1, 'wins', 'DESC');
       }
-      else{
-        (<HTMLElement>e.target).setAttribute('sort','DESC');
-        this.renderWinners(1,'wins','DESC');
-      }
-    }
-    else if((<HTMLElement>e.target).id=='time'){
-      (<HTMLElement>document.querySelector('.page')).innerHTML='1';
-      if((<HTMLElement>e.target).getAttribute('sort')=='' || (<HTMLElement>e.target).getAttribute('sort')=='DESC'){
-        (<HTMLElement>e.target).setAttribute('sort','ASC');
-        (<HTMLElement>(document.querySelector('#win'))).setAttribute('sort','');
-        this.renderWinners(1,'time','ASC');
-      }
-      else{
-        (<HTMLElement>e.target).setAttribute('sort','DESC');
-        this.renderWinners(1,'time','DESC');
+    } else if ((<HTMLElement>e.target).id == 'time') {
+      (<HTMLElement>document.querySelector('.page')).innerHTML = '1';
+      if (
+        (<HTMLElement>e.target).getAttribute('sort') == '' ||
+        (<HTMLElement>e.target).getAttribute('sort') == 'DESC'
+      ) {
+        (<HTMLElement>e.target).setAttribute('sort', 'ASC');
+        (<HTMLElement>document.querySelector('#win')).setAttribute('sort', '');
+        this.renderWinners(1, 'time', 'ASC');
+      } else {
+        (<HTMLElement>e.target).setAttribute('sort', 'DESC');
+        this.renderWinners(1, 'time', 'DESC');
       }
     }
   }
-  getpage(){
+
+  getpage() {
     let page;
-    if((<HTMLElement>document.querySelector('.page'))){
-        page=(<HTMLElement>document.querySelector('.page'))?.innerHTML;
-        return page=Number(page);
-    }
-    else {
-        return page=1;
+    if (<HTMLElement>document.querySelector('.page')) {
+      page = (<HTMLElement>document.querySelector('.page'))?.innerHTML;
+      return (page = Number(page));
+    } else {
+      return (page = 1);
     }
   }
 
-  pagination(e:Event){
-    setTimeout(()=>{
-      let sort:string;let order:string;
-        // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
-        if((<HTMLElement>(document.querySelector('#time'))).getAttribute('sort')=='' && (<HTMLElement>(document.querySelector('#win'))).getAttribute('sort')==''){
-          sort='id'; order='DESC';
-        }
-        else if((<HTMLElement>(document.querySelector('#time'))).getAttribute('sort')!=''){
-          sort='time'; order=String((<HTMLElement>(document.querySelector('#time'))).getAttribute('sort'));
-        }
-        else if((<HTMLElement>(document.querySelector('#win'))).getAttribute('sort')!=''){
-          sort='wins'; order=String((<HTMLElement>(document.querySelector('#win'))).getAttribute('sort'));
-        }
-        else{
-          sort='id'; order='ASC';
-        }
+  pagination(e: Event) {
+    setTimeout(() => {
+      let sort: string;
+      let order: string;
+      // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+      if (
+        (<HTMLElement>document.querySelector('#time')).getAttribute('sort') ==
+          '' &&
+        (<HTMLElement>document.querySelector('#win')).getAttribute('sort') == ''
+      ) {
+        sort = 'id';
+        order = 'DESC';
+      } else if (
+        (<HTMLElement>document.querySelector('#time')).getAttribute('sort') !=
+        ''
+      ) {
+        sort = 'time';
+        order = String(
+          (<HTMLElement>document.querySelector('#time')).getAttribute('sort')
+        );
+      } else if (
+        (<HTMLElement>document.querySelector('#win')).getAttribute('sort') != ''
+      ) {
+        sort = 'wins';
+        order = String(
+          (<HTMLElement>document.querySelector('#win')).getAttribute('sort')
+        );
+      } else {
+        sort = 'id';
+        order = 'ASC';
+      }
 
-    if((<HTMLInputElement>e.target).value=='Next'){
-      if(10*this.getpage()<Number(this.count.innerHTML.replace(/[^0-9]/g, ''))){
-        this.tbody.innerHTML=``;
-        
-        this.renderWinners(this.getpage()+1,sort,order);
-        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()+1}`;
+      if ((<HTMLInputElement>e.target).value == 'Next') {
+        if (
+          10 * this.getpage() <
+          Number(this.count.innerHTML.replace(/[^0-9]/g, ''))
+        ) {
+          this.tbody.innerHTML = '';
+
+          this.renderWinners(this.getpage() + 1, sort, order);
+          (<HTMLElement>document.querySelector('.page')).innerHTML = `${
+            this.getpage() + 1
+          }`;
+        }
+      } else if ((<HTMLInputElement>e.target).value == 'Prev') {
+        if (this.getpage() > 1) {
+          this.tbody.innerHTML = '';
+          // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+          this.renderWinners(this.getpage() - 1, sort, order);
+          (<HTMLElement>document.querySelector('.page')).innerHTML = `${
+            this.getpage() - 1
+          }`;
+        }
       }
-    }
-    else if((<HTMLInputElement>e.target).value=='Prev'){
-      if(this.getpage()>1){
-        this.tbody.innerHTML=``;
-        // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
-        this.renderWinners(this.getpage()-1,sort,order);
-        (<HTMLElement>document.querySelector('.page')).innerHTML=`${this.getpage()-1}`;
-      }
-    }
-      },1000);
+    }, 1000);
   }
 }
 

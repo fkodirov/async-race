@@ -1,9 +1,9 @@
-import BaseComponent from '../../templates/component';
+import BaseComponent from "../../templates/component";
 
 class Footer extends BaseComponent {
   constructor() {
-    super('footer');
-    this.setClass('footer');
+    super("footer");
+    this.setClass("footer");
   }
 }
 

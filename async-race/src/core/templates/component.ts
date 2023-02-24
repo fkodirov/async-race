@@ -38,7 +38,7 @@ class BaseComponent {
     if (value) {
       this.element.setAttribute(attr, value);
     } else {
-      this.element.setAttribute(attr, "");
+      this.element.setAttribute(attr, '');
     }
     return this;
   }

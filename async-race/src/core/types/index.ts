@@ -4,15 +4,17 @@ export interface TGarage {
   id: number;
 }
 
-export type TWinners =[{
-  id: number;
-  wins: number;
-  time: number;
-}]
+export type TWinners = [
+  {
+    id: number;
+    wins: number;
+    time: number;
+  }
+];
 
 export interface obj {
   name: string;
-  color:string;
+  color: string;
 }
 
 export interface Response {
@@ -20,12 +22,10 @@ export interface Response {
 }
 export interface obj2 {
   name: string;
-  color:string;
+  color: string;
   id: number;
 }
 
 export interface Response2 {
   [key: number]: obj2;
 }
-
-
