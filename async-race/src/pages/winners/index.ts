@@ -1,5 +1,4 @@
 import BaseComponent from "../../core/templates/component";
-import getWinners from "../../core/logic/winners";
 import { TGarage } from "../../core/types";
 import { Response } from "../../core/types";
 import Api from "../../core/components/api/api";
@@ -68,9 +67,6 @@ class WinnersPage extends BaseComponent {
 
   constructor(title: string, content: string) {
     super("main");
-    // const nav= new BaseComponent('nav').render(this);
-    // const nav1=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Garage').render(nav);
-    // const nav2=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Winners').render(nav);
     this.api = new Api();
     const main = new BaseComponent("main").render(this);
     const countblock = new BaseComponent("div")
@@ -128,10 +124,9 @@ class WinnersPage extends BaseComponent {
         const id: number = garage[i].id;
         garageObj[id] = { name: garage[i].name, color: garage[i].color };
       }
-      getWinners(page, sort, order).then(({ result, total }) => {
-        // console.log(result.headers.get('X-Total-Count'));
+      this.api.getWinners(page, sort, order).then(({ result, total }) => {
         this.count.innerHTML = total;
-        // this.count.innerHTML=`(${result.length})`;
+
         for (let i = 0; i < result.length; i++) {
           new BaseComponent("tr")
             .setHTML(
@@ -153,8 +148,6 @@ class WinnersPage extends BaseComponent {
             )
             .render(this.tbody);
         }
-        //   new BaseComponent('div').setClass('pagination').setHandler('click',(e)=>{this.pagination(e)}).setHTML(`<input type="button" class="btn btn-page" value="prev">
-        // <input type="button" class="btn btn-page" value="next">`).renderAfter(this.tbody);
       });
     });
   }
@@ -203,7 +196,7 @@ class WinnersPage extends BaseComponent {
     setTimeout(() => {
       let sort: string;
       let order: string;
-      // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+
       if (
         (<HTMLElement>document.querySelector("#time")).getAttribute("sort") ==
           "" &&
@@ -246,7 +239,7 @@ class WinnersPage extends BaseComponent {
       } else if ((<HTMLInputElement>e.target).value == "Prev") {
         if (this.getpage() > 1) {
           this.tbody.innerHTML = "";
-          // (<HTMLElement>document.querySelector('.pagination')).innerHTML=``;
+
           this.renderWinners(this.getpage() - 1, sort, order);
           (<HTMLElement>document.querySelector(".page")).innerHTML = `${
             this.getpage() - 1

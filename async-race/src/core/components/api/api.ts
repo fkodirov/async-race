@@ -10,39 +10,32 @@ class Api {
   }
 
   async start(id: number): Promise<options> {
-    // let data: { velocity: number; distance: number };
-    const response = await fetch(
-      `http://127.0.0.1:3000/engine?id=${id}&status=started`,
-      {
-        method: "PATCH",
-      }
-    );
+    const response = await fetch(`${this.url}/engine?id=${id}&status=started`, {
+      method: "PATCH",
+    });
     return await response.json();
   }
 
   async delete(id: number): Promise<void> {
-    await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+    await fetch(`${this.url}/garage/${id}`, {
       method: "DELETE",
     });
   }
   async stop(id: number): Promise<void> {
-    await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=stopped`, {
+    await fetch(`${this.url}/engine?id=${id}&status=stopped`, {
       method: "PATCH",
     });
   }
 
   async getDrive(id: number): Promise<Response> {
-    const response = fetch(
-      `http://127.0.0.1:3000/engine?id=${id}&status=drive`,
-      {
-        method: "PATCH",
-      }
-    );
+    const response = fetch(`${this.url}/engine?id=${id}&status=drive`, {
+      method: "PATCH",
+    });
     return response;
   }
 
   async generate(data: { name: string; color: string }) {
-    await fetch("http://127.0.0.1:3000/garage", {
+    await fetch(`${this.url}/garage`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +45,7 @@ class Api {
   }
 
   async create(data: props) {
-    await fetch("http://127.0.0.1:3000/garage", {
+    await fetch(`${this.url}/garage`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +55,7 @@ class Api {
   }
 
   async update(id: number, data: props) {
-    await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+    await fetch(`${this.url}/garage/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +64,7 @@ class Api {
     });
   }
   async createWinner(data: { id: number; wins: number; time: number }) {
-    const response = await fetch("http://127.0.0.1:3000/winners", {
+    const response = await fetch(`${this.url}/winners`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +74,7 @@ class Api {
   }
 
   async getWinner(id: number) {
-    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+    const response = await fetch(`${this.url}/winners/${id}`, {
       method: "GET",
     });
     return await response.json();
@@ -89,7 +82,7 @@ class Api {
 
   async updateWinner(id: number, wins: number, time: number) {
     const data = { wins: wins, time: time };
-    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+    const response = await fetch(`${this.url}/winners/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +91,7 @@ class Api {
     });
   }
   async deleteWinner(id: number) {
-    await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+    await fetch(`${this.url}/winners/${id}`, {
       method: "DELETE",
     });
   }
@@ -106,7 +99,7 @@ class Api {
     let result: TWinners;
     let total: string;
     const response = await fetch(
-      `http://127.0.0.1:3000/winners?_page=${page}&_sort=${sort}&_order=${order}&_limit=10`,
+      `${this.url}/winners?_page=${page}&_sort=${sort}&_order=${order}&_limit=10`,
       {
         method: "GET",
       }
@@ -118,7 +111,7 @@ class Api {
 
   async getGarage(page: number) {
     const response = await fetch(
-      `http://127.0.0.1:3000/garage?_page=${Number(page)}&_limit=7`,
+      `${this.url}/garage?_page=${Number(page)}&_limit=7`,
       {
         method: "GET",
       }
@@ -127,7 +120,7 @@ class Api {
   }
 
   async getAllCars(): Promise<TGarage[]> {
-    const response = await fetch("http://127.0.0.1:3000/garage", {
+    const response = await fetch(`${this.url}/garage`, {
       method: "GET",
     });
     return await response.json();

@@ -7,10 +7,7 @@ import { generateCar } from "../../core/logic/garage";
 
 import { obj2 } from "../../core/types";
 import { Response2 } from "../../core/types";
-// const car1 = <string>require('../../assets/images/car-01.svg');
-// const car2 = <string>require('../../assets/images/car-02.svg');
-// const car3 = <string>require('../../assets/images/car-03.svg');
-// const car4 = <string>require('../../assets/images/car-04.svg');
+
 const cars = [
   `<path fill-rule="evenodd" d="m2.2 125.4c0.9-4.5 2.2-9.9 2.2-9.9l-0.2-11.8c0 0 7.5-3.8 7.8-5.6 0.2-1.8 1.1-23.1 3.5-26.8 
   2.5-3.8-1.1-17.1-1.1-17.1h17.4c0 0 17.6-15.1 30-20.7 0 0 2-8.7-5.3-13.3l-0.2-2.7c0 0 16-2.2 37.3-3.8 0 0 7.3-7.9 18-9.1 
@@ -82,9 +79,6 @@ class GaragePage extends BaseComponent {
   constructor(title: string, content: string) {
     super("main");
     api = new Api();
-    // const nav= new BaseComponent('nav').render(this);
-    // const nav1=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Garage').render(nav);
-    // const nav2=new BaseComponent('input').setClass('btn').setAttribute('type','button').setAttribute('value','Winners').render(nav);
     const main = new BaseComponent("main").render(this);
     const form1 = new BaseComponent("form")
       .setAttribute("id", "create")
@@ -241,11 +235,8 @@ class GaragePage extends BaseComponent {
   }
 
   async renderGarage(tracks: HTMLElement, count: HTMLElement, page: number) {
-    // count.innerHTML=
     const result: Response2 = await this.getResponse(page);
     for (const key in result) {
-      // count.innerHTML=`(${Number(key)+1})`;
-      // (<HTMLElement>document.querySelector('.count')).innerHTML=`(${Number(key)+1})`;
       const track = new BaseComponent("div").setClass("track").render(tracks);
       new BaseComponent("div")
         .setClass("track-buttons")

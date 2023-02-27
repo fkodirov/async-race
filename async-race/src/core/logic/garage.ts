@@ -4,7 +4,6 @@ import mark from "../constants/mark";
 import model from "../constants/mark";
 import colors from "../constants/colors";
 import Api from "../components/api/api";
-// import { json } from "body-parser";
 
 let api = new Api();
 function getAction(e: Event) {
@@ -78,10 +77,6 @@ function startAnimation(distance: number, velocity: number, index: number) {
   let id = Number(document.querySelectorAll('[value="remove"]')[index].id);
   const stops = document.querySelectorAll("[value='stop']");
   (<HTMLInputElement>stops[index]).onclick = function () {
-    // (<HTMLInputElement>document.querySelectorAll('[value="start"]')[index]).removeAttribute('disabled');
-    // (<HTMLInputElement>document.querySelectorAll('[value="remove"]')[index]).removeAttribute('disabled');
-    // (<HTMLInputElement>document.querySelectorAll('[value="select"]')[index]).removeAttribute('disabled');
-
     if (
       (<HTMLInputElement>document.querySelector('[value="prev"]')).hasAttribute(
         "disabled"
@@ -135,7 +130,6 @@ function startAnimation(distance: number, velocity: number, index: number) {
           } went 1st ${(endtime / 1000).toFixed(2)}s`;
           (<HTMLElement>document.querySelector(".wow")).style.display = "block";
         }
-        // alert(`${(<HTMLElement>document.querySelectorAll('.name')[index]).textContent} ${endtime/1000}`);
       }
       (<HTMLElement>(
         document.querySelectorAll(".car")[index]
@@ -153,8 +147,6 @@ function startAnimation(distance: number, velocity: number, index: number) {
     draw(timePassed);
   }, 20);
 
-  // в то время как timePassed идёт от 0 до timeend
-  // left изменяет значение от 0px до vw-115px
   function draw(timePassed: number) {
     (<HTMLElement>document.querySelectorAll(".car")[index]).style.left =
       (timePassed / sdvig).toFixed(4) + "px";
@@ -169,14 +161,11 @@ async function startRace(e: Event) {
     const selectbuttons = document.querySelectorAll('[value="select"]');
     const removebuttons = document.querySelectorAll('[value="remove"]');
     const index = Array.from(count).indexOf(<HTMLElement>e.target);
-    // (<HTMLInputElement>count[1]).click();
 
     await Promise.allSettled([
       count.forEach((e) => (<HTMLInputElement>e).click()),
     ]);
-    // count.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
-    // selectbuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
-    // removebuttons.forEach((e)=>(<HTMLInputElement>e).setAttribute('disabled','disabled'))
+
     stopbuttons.forEach((e) =>
       (<HTMLInputElement>e).setAttribute("disabled", "disabled")
     );
